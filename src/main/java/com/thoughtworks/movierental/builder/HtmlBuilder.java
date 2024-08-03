@@ -2,15 +2,18 @@ package com.thoughtworks.movierental.builder;
 
 import com.thoughtworks.movierental.Customer;
 import com.thoughtworks.movierental.Rental;
-import com.thoughtworks.movierental.StatementCalculator;
-import com.thoughtworks.movierental.calculator.RentalAmountCalculator;
+import com.thoughtworks.movierental.calculator.StatementCalculator;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class HtmlBuilder implements StatementBuilder {
+    private final StatementCalculator calculator;
+    private final DecimalFormat decimalFormat = new DecimalFormat("#.00");
 
-    private final StatementCalculator calculator = new StatementCalculator();
-    private final RentalAmountCalculator amountCalculator = new RentalAmountCalculator();
+    public HtmlBuilder(StatementCalculator calculator) {
+        this.calculator = calculator;
+    }
 
     @Override
     public String buildStatement(Customer customer) {
@@ -33,10 +36,10 @@ public class HtmlBuilder implements StatementBuilder {
                 .append("  <tr><th>Title</th><th>Amount</th></tr>\n");
 
         for (Rental rental : rentals) {
-            double amount = amountCalculator.calculateAmount(rental);
+            double amount = calculator.calculateAmountForRental(rental);
             html.append("  <tr>\n")
                     .append("    <td>").append(rental.getMovie().getTitle()).append("</td>\n")
-                    .append("    <td>").append(amount).append("</td>\n")
+                    .append("    <td>").append(decimalFormat.format(amount)).append("</td>\n")
                     .append("  </tr>\n");
         }
 
@@ -44,7 +47,7 @@ public class HtmlBuilder implements StatementBuilder {
     }
 
     private void appendHtmlFooter(StringBuilder html, double totalAmount, int frequentRenterPoints) {
-        html.append("<p>Amount owed is ").append(totalAmount).append("</p>\n")
+        html.append("<p>Amount owed is ").append(decimalFormat.format(totalAmount)).append("</p>\n")
                 .append("<p>You earned ").append(frequentRenterPoints).append(" frequent renter points</p>\n")
                 .append("</body>\n")
                 .append("</html>");

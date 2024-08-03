@@ -1,17 +1,12 @@
 package com.thoughtworks.movierental;
 
-import lombok.AllArgsConstructor;
+import com.thoughtworks.movierental.pricecode.PriceCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class Movie {
-    public static final int CHILDRENS = 2;
-    public static final int REGULAR = 0;
-    public static final int NEW_RELEASE = 1;
-
-    private String title;
-    private int priceCode;
+    private final String title;
+    private final PriceCode priceCode;
 }

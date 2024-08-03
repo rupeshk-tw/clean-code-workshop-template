@@ -1,6 +1,5 @@
 package com.thoughtworks.movierental;
 
-import com.thoughtworks.movierental.service.StatementService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -15,9 +14,5 @@ public class Customer {
 
     public void addRental(Rental rental) {
         rentals.add(rental);
-    }
-
-    public String generateStatement(StatementService statementService) {
-        return statementService.generateStatement(this);
     }
 }

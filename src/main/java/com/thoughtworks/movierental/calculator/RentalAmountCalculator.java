@@ -1,40 +1,27 @@
 package com.thoughtworks.movierental.calculator;
 
-import com.thoughtworks.movierental.Movie;
 import com.thoughtworks.movierental.Rental;
+import com.thoughtworks.movierental.pricecode.ChildrensPriceCode;
+import com.thoughtworks.movierental.pricecode.NewReleasePriceCode;
+import com.thoughtworks.movierental.pricecode.PriceCodeStrategy;
+import com.thoughtworks.movierental.pricecode.RegularPriceCode;
 
 public class RentalAmountCalculator {
 
+    private final PriceCodeStrategy regularStrategy = new RegularPriceCode();
+    private final PriceCodeStrategy newReleaseStrategy = new NewReleasePriceCode();
+    private final PriceCodeStrategy childrensStrategy = new ChildrensPriceCode();
+
     public double calculateAmount(Rental rental) {
         switch (rental.getMovie().getPriceCode()) {
-            case Movie.REGULAR:
-                return calculateRegularAmount(rental);
-            case Movie.NEW_RELEASE:
-                return calculateNewReleaseAmount(rental);
-            case Movie.CHILDRENS:
-                return calculateChildrensAmount(rental);
+            case REGULAR:
+                return regularStrategy.calculateAmount(rental.getDaysRented());
+            case NEW_RELEASE:
+                return newReleaseStrategy.calculateAmount(rental.getDaysRented());
+            case CHILDRENS:
+                return childrensStrategy.calculateAmount(rental.getDaysRented());
             default:
                 throw new IllegalArgumentException("Unknown price code");
         }
-    }
-
-    private double calculateRegularAmount(Rental rental) {
-        double amount = 2;
-        if (rental.getDaysRented() > 2) {
-            amount += (rental.getDaysRented() - 2) * 1.5;
-        }
-        return amount;
-    }
-
-    private double calculateNewReleaseAmount(Rental rental) {
-        return rental.getDaysRented() * 3;
-    }
-
-    private double calculateChildrensAmount(Rental rental) {
-        double amount = 1.5;
-        if (rental.getDaysRented() > 3) {
-            amount += (rental.getDaysRented() - 3) * 1.5;
-        }
-        return amount;
     }
 }
