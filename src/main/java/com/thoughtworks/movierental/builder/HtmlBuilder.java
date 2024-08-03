@@ -28,7 +28,7 @@ public class HtmlBuilder implements StatementBuilder {
         html.append("<html>\n")
                 .append("<head><title>Rental Statement</title></head>\n")
                 .append("<body>\n")
-                .append("<h1>Rental Record for ").append(customerName).append("</h1>\n");
+                .append(String.format("<h1>Rental Record for %s</h1>\n", customerName));
     }
 
     private void appendHtmlTable(StringBuilder html, List<Rental> rentals) {
@@ -36,19 +36,23 @@ public class HtmlBuilder implements StatementBuilder {
                 .append("  <tr><th>Title</th><th>Amount</th></tr>\n");
 
         for (Rental rental : rentals) {
-            double amount = calculator.calculateAmountForRental(rental);
-            html.append("  <tr>\n")
-                    .append("    <td>").append(rental.getMovie().getTitle()).append("</td>\n")
-                    .append("    <td>").append(decimalFormat.format(amount)).append("</td>\n")
-                    .append("  </tr>\n");
+            appendRentalRow(html, rental);
         }
 
         html.append("</table>\n");
     }
 
+    private void appendRentalRow(StringBuilder html, Rental rental) {
+        double amount = calculator.calculateAmountForRental(rental);
+        html.append("  <tr>\n")
+                .append(String.format("    <td>%s</td>\n", rental.getMovie().getTitle()))
+                .append(String.format("    <td>%s</td>\n", decimalFormat.format(amount)))
+                .append("  </tr>\n");
+    }
+
     private void appendHtmlFooter(StringBuilder html, double totalAmount, int frequentRenterPoints) {
-        html.append("<p>Amount owed is ").append(decimalFormat.format(totalAmount)).append("</p>\n")
-                .append("<p>You earned ").append(frequentRenterPoints).append(" frequent renter points</p>\n")
+        html.append(String.format("<p>Amount owed is %s</p>\n", decimalFormat.format(totalAmount)))
+                .append(String.format("<p>You earned %d frequent renter points</p>\n", frequentRenterPoints))
                 .append("</body>\n")
                 .append("</html>");
     }
