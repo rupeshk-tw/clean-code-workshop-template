@@ -16,6 +16,26 @@ class HtmlBuilderTest {
     private StatementBuilder statementBuilder;
     private StatementCalculator statementCalculator;
 
+    private static final String EXPECTED_HTML = "<html>\n" +
+            "<head><title>Rental Statement</title></head>\n" +
+            "<body>\n" +
+            "<h1>Rental Record for John Doe</h1>\n" +
+            "<table border=\"1\">\n" +
+            "  <tr><th>Title</th><th>Amount</th></tr>\n" +
+            "  <tr>\n" +
+            "    <td>Regular Movie</td>\n" +
+            "    <td>3.50</td>\n" +
+            "  </tr>\n" +
+            "  <tr>\n" +
+            "    <td>New Release Movie</td>\n" +
+            "    <td>6.00</td>\n" +
+            "  </tr>\n" +
+            "</table>\n" +
+            "<p>Amount owed is 9.50</p>\n" +
+            "<p>You earned 3 frequent renter points</p>\n" +
+            "</body>\n" +
+            "</html>";
+
     @BeforeEach
     void setUp() {
         RentalAmountCalculator amountCalculator = new RentalAmountCalculator();
@@ -27,37 +47,21 @@ class HtmlBuilderTest {
     @Test
     void testBuildStatement() {
         // Given
-        Customer customer = new Customer("John Doe");
-        Movie regularMovie = new Movie("Regular Movie", PriceCode.REGULAR);
-        Movie newReleaseMovie = new Movie("New Release Movie", PriceCode.NEW_RELEASE);
-        customer.addRental(new Rental(regularMovie, 3));
-        customer.addRental(new Rental(newReleaseMovie, 2));
-
-        // Expected HTML output
-        String expectedHtml = "<html>\n" +
-                "<head><title>Rental Statement</title></head>\n" +
-                "<body>\n" +
-                "<h1>Rental Record for John Doe</h1>\n" +
-                "<table border=\"1\">\n" +
-                "  <tr><th>Title</th><th>Amount</th></tr>\n" +
-                "  <tr>\n" +
-                "    <td>Regular Movie</td>\n" +
-                "    <td>3.50</td>\n" +
-                "  </tr>\n" +
-                "  <tr>\n" +
-                "    <td>New Release Movie</td>\n" +
-                "    <td>6.00</td>\n" +
-                "  </tr>\n" +
-                "</table>\n" +
-                "<p>Amount owed is 9.50</p>\n" +
-                "<p>You earned 3 frequent renter points</p>\n" +
-                "</body>\n" +
-                "</html>";
+        Customer customer = createCustomerWithRentals();
 
         // When
         String actualHtml = statementBuilder.buildStatement(customer);
 
         // Then
-        assertEquals(expectedHtml, actualHtml);
+        assertEquals(EXPECTED_HTML, actualHtml, "The generated HTML statement does not match the expected output.");
+    }
+
+    private Customer createCustomerWithRentals() {
+        Customer customer = new Customer("John Doe");
+        Movie regularMovie = new Movie("Regular Movie", PriceCode.REGULAR);
+        Movie newReleaseMovie = new Movie("New Release Movie", PriceCode.NEW_RELEASE);
+        customer.addRental(new Rental(regularMovie, 3));
+        customer.addRental(new Rental(newReleaseMovie, 2));
+        return customer;
     }
 }
