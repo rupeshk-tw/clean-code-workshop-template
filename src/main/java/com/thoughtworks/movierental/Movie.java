@@ -1,5 +1,12 @@
 package com.thoughtworks.movierental;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Movie {
     public static final int CHILDRENS = 2;
     public static final int REGULAR = 0;
@@ -7,21 +14,4 @@ public class Movie {
 
     private String title;
     private int priceCode;
-
-    public Movie(String title, int priceCode) {
-        this.title = title;
-        this.priceCode = priceCode;
-    }
-
-    public int getPriceCode() {
-        return priceCode;
-    }
-
-    public void setPriceCode(int arg) {
-        priceCode = arg;
-    }
-
-    public String getTitle() {
-        return title;
-    }
 }
