@@ -1,13 +1,11 @@
 package com.thoughtworks.movierental;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class Rental {
-    private Movie movie;
-    private int daysRented;
+    private final Movie movie;
+    private final int daysRented;
 }

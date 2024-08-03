@@ -16,8 +16,7 @@ public class Customer {
         rentals.add(rental);
     }
 
-    public String statement() {
-        StatementService statementService = new StatementService();
+    public String generateStatement(StatementService statementService) {
         return statementService.generateHtmlStatement(this);
     }
 }
