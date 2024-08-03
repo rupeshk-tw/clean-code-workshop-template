@@ -1,6 +1,6 @@
 package com.thoughtworks.movierental;
 
-import com.thoughtworks.movierental.builder.HtmlBuilder;
+import com.thoughtworks.movierental.builder.html.HtmlBuilder;
 import com.thoughtworks.movierental.builder.StatementBuilder;
 import com.thoughtworks.movierental.calculator.FrequentRenterPointsCalculator;
 import com.thoughtworks.movierental.calculator.RentalAmountCalculator;

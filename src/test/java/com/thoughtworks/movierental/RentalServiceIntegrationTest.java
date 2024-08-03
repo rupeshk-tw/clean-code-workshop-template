@@ -1,6 +1,6 @@
 package com.thoughtworks.movierental;
 
-import com.thoughtworks.movierental.builder.HtmlBuilder;
+import com.thoughtworks.movierental.builder.html.HtmlBuilder;
 import com.thoughtworks.movierental.calculator.FrequentRenterPointsCalculator;
 import com.thoughtworks.movierental.calculator.RentalAmountCalculator;
 import com.thoughtworks.movierental.calculator.StatementCalculator;
@@ -26,21 +26,36 @@ class RentalServiceIntegrationTest {
     @Test
     void testCompleteRentalProcess() {
         // Given
-        Customer customer = new Customer("John Doe");
-        Movie regularMovie = new Movie("Regular Movie", PriceCode.REGULAR);
-        Movie newReleaseMovie = new Movie("New Release Movie", PriceCode.NEW_RELEASE);
-        Movie childrensMovie = new Movie("Children's Movie", PriceCode.CHILDRENS);
-        
-        customer.addRental(new Rental(regularMovie, 3));
-        customer.addRental(new Rental(newReleaseMovie, 2));
-        customer.addRental(new Rental(childrensMovie, 5));
+        Customer customer = createCustomerWithRentals();
 
         // Expected calculations
-        double expectedAmount = 3.50 + 6.00 + 4.50;
-        int expectedPoints = 1 + 2 + 1;  // Assuming frequent renter points are 1 for regular, 2 for new release, and 1 for children's movie
+        double expectedAmount = 14.00;
+        int expectedPoints = 4;
 
-        // Expected HTML output
-        String expectedHtml = "<html>\n" +
+        // Expected HTML output with proper escaping
+        String expectedHtml = generateExpectedHtml();
+
+        // When
+        double actualAmount = statementCalculator.calculateTotalAmount(customer);
+        int actualPoints = statementCalculator.calculateFrequentRenterPoints(customer);
+        String actualHtml = htmlBuilder.buildStatement(customer);
+
+        // Then
+        assertEquals(expectedAmount, actualAmount, "The total amount calculated does not match the expected value.");
+        assertEquals(expectedPoints, actualPoints, "The frequent renter points calculated do not match the expected value.");
+        assertEquals(expectedHtml, actualHtml, "The generated HTML statement does not match the expected output.");
+    }
+
+    private Customer createCustomerWithRentals() {
+        Customer customer = new Customer("John Doe");
+        customer.addRental(new Rental(new Movie("Regular Movie", PriceCode.REGULAR), 3));
+        customer.addRental(new Rental(new Movie("New Release Movie", PriceCode.NEW_RELEASE), 2));
+        customer.addRental(new Rental(new Movie("Children's Movie", PriceCode.CHILDRENS), 5));
+        return customer;
+    }
+
+    private String generateExpectedHtml() {
+        return "<html>\n" +
                 "<head><title>Rental Statement</title></head>\n" +
                 "<body>\n" +
                 "<h1>Rental Record for John Doe</h1>\n" +
@@ -55,7 +70,7 @@ class RentalServiceIntegrationTest {
                 "    <td>6.00</td>\n" +
                 "  </tr>\n" +
                 "  <tr>\n" +
-                "    <td>Children's Movie</td>\n" +
+                "    <td>Children&#39;s Movie</td>\n" +
                 "    <td>4.50</td>\n" +
                 "  </tr>\n" +
                 "</table>\n" +
@@ -63,15 +78,5 @@ class RentalServiceIntegrationTest {
                 "<p>You earned 4 frequent renter points</p>\n" +
                 "</body>\n" +
                 "</html>";
-
-        // When
-        double actualAmount = statementCalculator.calculateTotalAmount(customer);
-        int actualPoints = statementCalculator.calculateFrequentRenterPoints(customer);
-        String actualHtml = htmlBuilder.buildStatement(customer);
-
-        // Then
-        assertEquals(expectedAmount, actualAmount);
-        assertEquals(expectedPoints, actualPoints);
-        assertEquals(expectedHtml, actualHtml);
     }
 }
