@@ -1,5 +1,9 @@
 package com.thoughtworks.movierental;
 
+import com.thoughtworks.movierental.calculator.FrequentRenterPointsCalculator;
+import com.thoughtworks.movierental.calculator.RentalAmountCalculator;
+import com.thoughtworks.movierental.builder.HtmlBuilder;
+
 public class CustomerTestHelper {
 
     public static Customer createCustomerWithRentals() {
@@ -13,34 +17,11 @@ public class CustomerTestHelper {
     }
 
     public static String generateExpectedHtml(Customer customer) {
-        StringBuilder html = new StringBuilder();
-        html.append("<html>\n")
-                .append("<head><title>Rental Statement</title></head>\n")
-                .append("<body>\n")
-                .append("<h1>Rental Record for ").append(customer.getName()).append("</h1>\n")
-                .append("<table border=\"1\">\n")
-                .append("  <tr><th>Title</th><th>Amount</th></tr>\n");
-
-        for (Rental rental : customer.getRentals()) {
-            double amount = calculateAmount(rental);
-            html.append("  <tr>\n")
-                    .append("    <td>").append(rental.getMovie().getTitle()).append("</td>\n")
-                    .append("    <td>").append(amount).append("</td>\n")
-                    .append("  </tr>\n");
-        }
-
-        double totalAmount = calculateTotalAmount(customer);
-        int frequentRenterPoints = calculateFrequentRenterPoints(customer);
-
-        html.append("</table>\n")
-                .append("<p>Amount owed is ").append(totalAmount).append("</p>\n")
-                .append("<p>You earned ").append(frequentRenterPoints).append(" frequent renter points</p>\n")
-                .append("</body>\n")
-                .append("</html>");
-
-        return html.toString();
+        HtmlBuilder htmlBuilder = new HtmlBuilder();
+        return htmlBuilder.buildStatement(customer);
     }
 
+    // Optionally, if you want to keep the calculation methods:
     private static double calculateAmount(Rental rental) {
         RentalAmountCalculator calculator = new RentalAmountCalculator();
         return calculator.calculateAmount(rental);

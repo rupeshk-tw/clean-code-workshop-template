@@ -1,5 +1,6 @@
 package com.thoughtworks.movierental;
 
+import com.thoughtworks.movierental.service.StatementService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +18,6 @@ public class Customer {
     }
 
     public String generateStatement(StatementService statementService) {
-        return statementService.generateHtmlStatement(this);
+        return statementService.generateStatement(this);
     }
 }

@@ -1,4 +1,7 @@
-package com.thoughtworks.movierental;
+package com.thoughtworks.movierental.calculator;
+
+import com.thoughtworks.movierental.Movie;
+import com.thoughtworks.movierental.Rental;
 
 public class RentalAmountCalculator {
 

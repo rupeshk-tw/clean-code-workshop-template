@@ -1,13 +1,19 @@
-package com.thoughtworks.movierental;
+package com.thoughtworks.movierental.builder;
+
+import com.thoughtworks.movierental.Customer;
+import com.thoughtworks.movierental.Rental;
+import com.thoughtworks.movierental.StatementCalculator;
+import com.thoughtworks.movierental.calculator.RentalAmountCalculator;
 
 import java.util.List;
 
-public class HtmlBuilder {
+public class HtmlBuilder implements StatementBuilder {
 
     private final StatementCalculator calculator = new StatementCalculator();
     private final RentalAmountCalculator amountCalculator = new RentalAmountCalculator();
 
-    public String buildHtmlStatement(Customer customer) {
+    @Override
+    public String buildStatement(Customer customer) {
         StringBuilder html = new StringBuilder();
         appendHtmlHeader(html, customer.getName());
         appendHtmlTable(html, customer.getRentals());
